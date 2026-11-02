@@ -6,16 +6,31 @@
     <title>TaskVibe - Pengingat Harian</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; }
+        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         form.add { display: grid; gap: 8px; margin-bottom: 24px; }
         input, textarea, button { padding: 8px; font-size: 14px; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; }
         .done { text-decoration: line-through; color: #888; }
         .success { background: #e6ffed; padding: 8px; border-radius: 6px; margin-bottom: 12px; }
+        .actions { display: flex; gap: 6px; align-items: center; }
         .actions form { display: inline; }
+        progress { width: 100%; height: 16px; }
     </style>
 </head>
 <body>
-    <h1>Pengingat Aktivitas Harian</h1>
+    <div class="header">
+        <h1>Pengingat Aktivitas Harian</h1>
+        <div>
+            <small>Halo, {{ auth()->user()->name }}</small>
+            <form method="POST" action="{{ route('logout') }}" style="display:inline">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <p>Progres: {{ $done }} dari {{ $total }} selesai</p>
+    <progress value="{{ $done }}" max="{{ max($total, 1) }}"></progress>
 
     @if (session('success'))
         <div class="success">{{ session('success') }}</div>
@@ -40,6 +55,7 @@
                 @endif
             </div>
             <div class="actions">
+                <a href="{{ route('activities.edit', $activity) }}">Edit</a>
                 <form method="POST" action="{{ route('activities.toggle', $activity) }}">
                     @csrf
                     @method('PATCH')
