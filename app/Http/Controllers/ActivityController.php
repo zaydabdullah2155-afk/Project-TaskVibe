@@ -7,11 +7,14 @@ use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $activities = Activity::orderBy('remind_at')->get();
+        $activities = $request->user()->activities()->orderBy('remind_at')->get();
 
-        return view('activities.index', compact('activities'));
+        $total = $activities->count();
+        $done = $activities->where('is_done', true)->count();
+
+        return view('activities.index', compact('activities', 'total', 'done'));
     }
 
     public function store(Request $request)
@@ -22,14 +25,39 @@ class ActivityController extends Controller
             'remind_at' => 'required|date_format:H:i',
         ]);
 
-        Activity::create($data);
+        $request->user()->activities()->create($data);
 
         return redirect()->route('activities.index')
             ->with('success', 'Pengingat berhasil ditambahkan.');
     }
 
+    public function edit(Activity $activity)
+    {
+        $this->ensureOwner($activity);
+
+        return view('activities.edit', compact('activity'));
+    }
+
+    public function update(Request $request, Activity $activity)
+    {
+        $this->ensureOwner($activity);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'remind_at' => 'required|date_format:H:i',
+        ]);
+
+        $activity->update($data);
+
+        return redirect()->route('activities.index')
+            ->with('success', 'Pengingat berhasil diperbarui.');
+    }
+
     public function toggle(Activity $activity)
     {
+        $this->ensureOwner($activity);
+
         $activity->update(['is_done' => ! $activity->is_done]);
 
         return redirect()->route('activities.index');
@@ -37,9 +65,16 @@ class ActivityController extends Controller
 
     public function destroy(Activity $activity)
     {
+        $this->ensureOwner($activity);
+
         $activity->delete();
 
         return redirect()->route('activities.index')
             ->with('success', 'Pengingat dihapus.');
+    }
+
+    private function ensureOwner(Activity $activity): void
+    {
+        abort_unless($activity->user_id === auth()->id(), 403);
     }
 }
