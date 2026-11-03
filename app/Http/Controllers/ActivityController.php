@@ -58,9 +58,21 @@ class ActivityController extends Controller
     {
         $this->ensureOwner($activity);
 
-        $activity->update(['is_done' => ! $activity->is_done]);
+        // Ubah status selesai (jika tadinya belum selesai, kini jadi selesai)
+        $newStatus = ! $activity->is_done;
+        $activity->update(['is_done' => $newStatus]);
 
-        return redirect()->route('activities.index');
+        // Jika aktivitas diubah menjadi selesai (true), berikan XP dan update Streak
+        if ($newStatus) {
+            $user = auth()->user();
+            if ($user) {
+                $user->updateStreak(); // Update streak harian (Ide 2)
+                $user->addExp(20);     // Tambah 20 XP setiap tugas selesai (Ide 1)
+            }
+        }
+
+        return redirect()->route('activities.index')
+            ->with('success', $newStatus ? 'Aktivitas selesai! +20 XP ditambahkan.' : 'Status aktivitas diperbarui.');
     }
 
     public function destroy(Activity $activity)

@@ -500,6 +500,8 @@
 
 <body>
 
+
+
 @php
     $pending = $total - $done;
     $percentage = $total > 0 ? round(($done / $total) * 100) : 0;
@@ -549,6 +551,36 @@
         </header>
 
         <!-- WELCOME -->
+         <!-- Widget Gamifikasi (CSS Murni Sesuai Tema TaskVibe) -->
+<div style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.2), rgba(6, 182, 212, 0.2)); border: 1px solid rgba(6, 182, 212, 0.3); padding: 20px; border-radius: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);">
+    <div>
+        <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <span style="background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold;">
+                ⭐ Level {{ auth()->user()->level ?? 1 }}
+            </span>
+            <span style="background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold;">
+                🔥 Streak: {{ auth()->user()->streak_count ?? 0 }} Hari
+            </span>
+        </div>
+        <h3 style="color: #ffffff; font-size: 18px; font-weight: bold; margin: 0 0 4px 0;">Misi Operator: {{ auth()->user()->name }}</h3>
+        <p style="color: #94a3b8; font-size: 13px; margin: 0;">Selesaikan tugas di bawah untuk menambah XP dan menaikkan level!</p>
+    </div>
+
+    <!-- XP Progress Bar -->
+    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(6, 182, 212, 0.2); padding: 12px 16px; border-radius: 12px; min-width: 220px;">
+        @php
+            $currentExp = auth()->user()->exp ?? 0;
+            $expInCurrentLevel = $currentExp % 100;
+        @endphp
+        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #cbd5e1; font-weight: 600;">
+            <span>XP Progress</span>
+            <span style="color: #22d3ee;">{{ $expInCurrentLevel }} / 100 XP</span>
+        </div>
+        <div style="width: 100%; background: #1e293b; height: 8px; border-radius: 9999px; overflow: hidden;">
+            <div style="background: linear-gradient(90deg, #22d3ee, #14b8a6); height: 100%; width: {{ $expInCurrentLevel }}%; transition: width 0.5s ease;"></div>
+        </div>
+    </div>
+</div>
         <section class="welcome-card">
             <div class="welcome-decoration">✦</div>
 
