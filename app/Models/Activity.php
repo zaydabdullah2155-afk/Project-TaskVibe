@@ -7,10 +7,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
-    protected $fillable = ['user_id', 'name', 'description', 'remind_at', 'is_done'];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'description',
+        'remind_at',
+        'deadline_at',
+        'is_done',
+    ];
 
     protected $casts = [
         'is_done' => 'boolean',
+        'deadline_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

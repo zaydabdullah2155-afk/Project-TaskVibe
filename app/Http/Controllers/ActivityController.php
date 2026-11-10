@@ -23,6 +23,7 @@ class ActivityController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'remind_at' => 'required|date_format:H:i',
+            'deadline_at' => 'nullable|date|after:now',
         ]);
 
         $request->user()->activities()->create($data);
@@ -46,6 +47,7 @@ class ActivityController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'remind_at' => 'required|date_format:H:i',
+            'deadline_at' => 'nullable|date',
         ]);
 
         $activity->update($data);
@@ -62,17 +64,28 @@ class ActivityController extends Controller
         $newStatus = ! $activity->is_done;
         $activity->update(['is_done' => $newStatus]);
 
-        // Jika aktivitas diubah menjadi selesai (true), berikan XP dan update Streak
+        $message = 'Status aktivitas diperbarui.';
+
+        // Jika aktivitas diubah menjadi selesai, berikan XP dan update streak
         if ($newStatus) {
             $user = auth()->user();
+
             if ($user) {
-                $user->updateStreak(); // Update streak harian (Ide 2)
-                $user->addExp(20);     // Tambah 20 XP setiap tugas selesai (Ide 1)
+                // Tepat waktu = XP penuh, terlambat = XP kecil
+                $isLate = $activity->deadline_at && now()->gt($activity->deadline_at);
+                $xp = $isLate ? 5 : 20;
+
+                $user->updateStreak();
+                $user->addExp($xp);
+
+                $message = $isLate
+                    ? "Aktivitas selesai, tapi melewati deadline. +{$xp} XP ditambahkan."
+                    : "Aktivitas selesai tepat waktu! +{$xp} XP ditambahkan.";
             }
         }
 
         return redirect()->route('activities.index')
-            ->with('success', $newStatus ? 'Aktivitas selesai! +20 XP ditambahkan.' : 'Status aktivitas diperbarui.');
+            ->with('success', $message);
     }
 
     public function destroy(Activity $activity)

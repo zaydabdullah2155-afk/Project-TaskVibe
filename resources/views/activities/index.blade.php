@@ -16,20 +16,22 @@
             background: #050a14;
         }
 
-        /* ===== BACKGROUND MEWAH ===== */
+        /* ===== BACKGROUND MEWAH (foto yul.jpg) ===== */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             color: #f1f5f9;
             min-height: 100vh;
             background-color: #050a14;
             background-image:
-                radial-gradient(900px 500px at 90% -10%, rgba(212, 175, 55, 0.22), transparent 60%),
-                radial-gradient(1000px 600px at 5% 105%, rgba(20, 184, 166, 0.25), transparent 60%),
-                radial-gradient(800px 500px at 50% 40%, rgba(14, 116, 144, 0.18), transparent 70%),
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(160deg, #060d1b 0%, #0a1628 50%, #04070f 100%);
-            background-size: auto, auto, auto, 48px 48px, 48px 48px, auto;
+                radial-gradient(900px 500px at 90% -10%, rgba(212, 175, 55, 0.18), transparent 60%),
+                radial-gradient(1000px 600px at 5% 105%, rgba(20, 184, 166, 0.15), transparent 60%),
+                radial-gradient(800px 500px at 50% 40%, rgba(14, 116, 144, 0.10), transparent 70%),
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(5, 10, 20, 0.70) 0%, rgba(5, 10, 20, 0.55) 50%, rgba(5, 10, 20, 0.80) 100%),
+                url('{{ asset("images/yul.jpg") }}');
+            background-size: auto, auto, auto, 48px 48px, 48px 48px, auto, cover;
+            background-position: center;
             background-attachment: fixed;
         }
 
@@ -40,20 +42,20 @@
             inset: 0;
             pointer-events: none;
             z-index: 0;
-            background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+            background: radial-gradient(ellipse at center, transparent 70%, rgba(0, 0, 0, 0.4) 100%);
         }
 
         /* Orb cahaya bergerak */
         body::after {
             content: "";
             position: fixed;
-            width: 520px;
-            height: 520px;
+            width: 640px;
+            height: 640px;
             top: 10%;
             left: 55%;
             pointer-events: none;
             z-index: 0;
-            background: radial-gradient(circle, rgba(34, 211, 238, 0.16), transparent 65%);
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.22), transparent 65%);
             filter: blur(60px);
             animation: floatOrb 18s ease-in-out infinite alternate;
         }
@@ -61,10 +63,6 @@
         @keyframes floatOrb {
             from { transform: translate(0, 0) scale(1); }
             to   { transform: translate(-180px, 120px) scale(1.25); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            body::after { animation: none; }
         }
 
         button, input, textarea {
@@ -103,8 +101,11 @@
         }
 
         .logo span {
-            color: #20d5d0;
-            text-shadow: 0 0 18px rgba(32, 213, 208, 0.7);
+            background: linear-gradient(90deg, #f3d97a, #d4af37, #f3d97a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.6));
         }
 
         .menu-title {
@@ -181,6 +182,10 @@
         .topbar h1 {
             font-size: 27px;
             margin-bottom: 7px;
+            background: linear-gradient(90deg, #ffffff 30%, #f3d97a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .topbar p {
@@ -189,15 +194,15 @@
         }
 
         .user-badge {
-            background: rgba(15, 25, 45, 0.55);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(15, 25, 45, 0.6));
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            color: #22d3ee;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #f3d97a;
+            border: 1px solid rgba(212, 175, 55, 0.6);
             padding: 12px 18px;
             border-radius: 14px;
             font-weight: 600;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
         }
 
         /* ===== GAMIFIKASI (level, streak, XP) ===== */
@@ -205,7 +210,7 @@
             background: linear-gradient(135deg, rgba(13, 148, 136, 0.18), rgba(6, 182, 212, 0.14));
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.55);
             padding: 20px;
             border-radius: 16px;
             margin-bottom: 24px;
@@ -214,8 +219,8 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35),
-                        0 0 20px rgba(6, 182, 212, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
+                        0 0 35px rgba(212, 175, 55, 0.15);
         }
 
         .gamify-badges {
@@ -295,14 +300,33 @@
         .welcome-card {
             background: linear-gradient(120deg, #0e7490, #0891b2, #14b8a6);
             color: white;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 12px 50px rgba(6, 182, 212, 0.25),
-                        0 0 0 1px rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(243, 217, 122, 0.7);
+            box-shadow: 0 15px 60px rgba(6, 182, 212, 0.35),
+                        0 0 40px rgba(212, 175, 55, 0.25);
             border-radius: 22px;
             padding: 30px;
             margin-bottom: 25px;
             position: relative;
             overflow: hidden;
+        }
+
+        /* Kilau cahaya yang lewat sesekali */
+        .welcome-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+            transform: skewX(-20deg);
+            animation: shine 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shine {
+            0%, 55% { left: -60%; }
+            100%    { left: 130%; }
         }
 
         .welcome-card h2 {
@@ -324,7 +348,7 @@
             opacity: .2;
         }
 
-        /* ===== STATISTIK ===== */
+        /* ===== STATISTIK & KARTU ===== */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -334,19 +358,22 @@
 
         .stat-card,
         .card {
-            background: linear-gradient(145deg, rgba(20, 32, 56, 0.6), rgba(10, 18, 36, 0.55));
+            background: linear-gradient(145deg, rgba(25, 40, 70, 0.55), rgba(8, 14, 28, 0.5));
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            border-top: 2px solid rgba(212, 175, 55, 0.7);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
                         inset 0 1px 0 rgba(255, 255, 255, 0.06);
-            transition: transform .25s ease, border-color .25s ease;
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
         }
 
         .stat-card:hover,
         .card:hover {
             transform: translateY(-3px);
-            border-color: rgba(212, 175, 55, 0.35);
+            border-color: rgba(243, 217, 122, 0.6);
+            box-shadow: 0 14px 50px rgba(0, 0, 0, 0.45),
+                        0 0 30px rgba(212, 175, 55, 0.15);
         }
 
         .stat-card {
@@ -397,6 +424,7 @@
 
         .card-header h3 {
             font-size: 17px;
+            color: #f6e3a1;
         }
 
         .card-header span {
@@ -423,8 +451,8 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #06b6d4, #2dd4bf);
-            box-shadow: 0 0 12px #06b6d480;
+            background: linear-gradient(90deg, #d4af37, #22d3ee);
+            box-shadow: 0 0 14px rgba(212, 175, 55, 0.6);
             border-radius: 20px;
             transition: width .3s;
         }
@@ -445,6 +473,11 @@
             font-size: 14px;
             background: rgba(5, 10, 20, 0.6);
             color: #f1f5f9;
+        }
+
+        .add-form input[type="time"],
+        .add-form input[type="datetime-local"] {
+            color-scheme: dark;
         }
 
         .add-form input::placeholder,
@@ -468,19 +501,19 @@
         }
 
         .primary-button {
-            background: linear-gradient(90deg, #06b6d4, #22d3b9);
+            background: linear-gradient(90deg, #d4af37, #22d3b9);
             color: #06121f;
             border: none;
             padding: 14px;
             border-radius: 11px;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 0 18px #06b6d430;
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.35);
             transition: .2s;
         }
 
         .primary-button:hover {
-            background: linear-gradient(90deg, #0891b2, #0d9488);
+            background: linear-gradient(90deg, #f3d97a, #2dd4bf);
         }
 
         /* ===== DAFTAR AKTIVITAS ===== */
@@ -571,6 +604,37 @@
             margin-bottom: 10px;
         }
 
+        /* ===== DEADLINE / HITUNG MUNDUR ===== */
+        .deadline {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px !important;
+            font-weight: 700;
+            background: rgba(34, 211, 238, 0.12);
+            color: #22d3ee !important;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+        }
+
+        .deadline-urgent {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24 !important;
+            border-color: rgba(251, 191, 36, 0.45);
+        }
+
+        .deadline-late {
+            background: rgba(251, 113, 133, 0.12);
+            color: #fb7185 !important;
+            border-color: rgba(251, 113, 133, 0.45);
+        }
+
+        .deadline-done {
+            background: rgba(45, 212, 191, 0.12);
+            color: #2dd4bf !important;
+            border-color: rgba(45, 212, 191, 0.4);
+        }
+
         /* ===== NOTIFIKASI ===== */
         .success {
             background: #103b36;
@@ -590,6 +654,14 @@
         /* ===== MOTIVASI ===== */
         .card p {
             color: #94a3b8;
+        }
+
+        /* ===== ANIMASI: hormati pengaturan "kurangi gerakan" ===== */
+        @media (prefers-reduced-motion: reduce) {
+            body::after,
+            .welcome-card::after {
+                animation: none;
+            }
         }
 
         /* ===== RESPONSIVE ===== */
@@ -750,7 +822,7 @@
         <section class="welcome-card">
             <div class="welcome-decoration">🏆</div>
 
-            <h2>Selamat Datang Kembali! 👋</h2>
+            <h2>Welcome To Our Project</h2>
 
             <p>
                 Setiap langkah kecil membawa kamu lebih dekat
@@ -849,6 +921,14 @@
                                 <small>
                                     ◷ Pukul {{ substr($activity->remind_at, 0, 5) }}
                                 </small>
+
+                                @if ($activity->deadline_at)
+                                    <br>
+                                    <small class="deadline"
+                                           data-deadline="{{ $activity->deadline_at->toIso8601String() }}"
+                                           data-done="{{ $activity->is_done ? '1' : '0' }}">
+                                    </small>
+                                @endif
 
                                 @if ($activity->description)
                                     <br>
@@ -951,6 +1031,16 @@
                             required
                         >
 
+                        <label>
+                            <small>Batas Waktu Selesai (opsional)</small>
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="deadline_at"
+                            value="{{ old('deadline_at') }}"
+                        >
+
                         <button type="submit" class="primary-button">
                             + Tambah Pengingat
                         </button>
@@ -985,6 +1075,44 @@
     </main>
 
 </div>
+
+<script>
+    function pad(n) {
+        return String(n).padStart(2, '0');
+    }
+
+    function updateTimers() {
+        document.querySelectorAll('.deadline').forEach(function (el) {
+            if (el.dataset.done === '1') {
+                el.textContent = '✓ Tugas selesai';
+                el.className = 'deadline deadline-done';
+                return;
+            }
+
+            var diff = new Date(el.dataset.deadline) - new Date();
+
+            if (diff <= 0) {
+                el.textContent = '⚠ Terlambat';
+                el.className = 'deadline deadline-late';
+                return;
+            }
+
+            var days  = Math.floor(diff / 86400000);
+            var hours = Math.floor((diff % 86400000) / 3600000);
+            var mins  = Math.floor((diff % 3600000) / 60000);
+            var secs  = Math.floor((diff % 60000) / 1000);
+
+            var text = (days > 0 ? days + ' hari ' : '') +
+                       pad(hours) + ':' + pad(mins) + ':' + pad(secs);
+
+            el.textContent = '⏳ ' + text;
+            el.className = diff < 3600000 ? 'deadline deadline-urgent' : 'deadline';
+        });
+    }
+
+    updateTimers();
+    setInterval(updateTimers, 1000);
+</script>
 
 </body>
 </html>
