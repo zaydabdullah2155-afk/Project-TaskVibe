@@ -12,10 +12,59 @@
             box-sizing: border-box;
         }
 
+        html {
+            background: #050a14;
+        }
+
+        /* ===== BACKGROUND MEWAH ===== */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #0b1220;
             color: #f1f5f9;
+            min-height: 100vh;
+            background-color: #050a14;
+            background-image:
+                radial-gradient(900px 500px at 90% -10%, rgba(212, 175, 55, 0.22), transparent 60%),
+                radial-gradient(1000px 600px at 5% 105%, rgba(20, 184, 166, 0.25), transparent 60%),
+                radial-gradient(800px 500px at 50% 40%, rgba(14, 116, 144, 0.18), transparent 70%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(160deg, #060d1b 0%, #0a1628 50%, #04070f 100%);
+            background-size: auto, auto, auto, 48px 48px, 48px 48px, auto;
+            background-attachment: fixed;
+        }
+
+        /* Vignette */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+        }
+
+        /* Orb cahaya bergerak */
+        body::after {
+            content: "";
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            top: 10%;
+            left: 55%;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.16), transparent 65%);
+            filter: blur(60px);
+            animation: floatOrb 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(-180px, 120px) scale(1.25); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body::after { animation: none; }
         }
 
         button, input, textarea {
@@ -25,13 +74,19 @@
         .dashboard {
             display: flex;
             min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
 
-        /* SIDEBAR */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 245px;
-            background: #080e1d;
-            border-right: 1px solid #123044;
+            background: linear-gradient(180deg, rgba(10, 18, 36, 0.75) 0%, rgba(5, 10, 20, 0.85) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(212, 175, 55, 0.18);
+            box-shadow: 4px 0 40px rgba(0, 0, 0, 0.45),
+                        inset -1px 0 0 rgba(34, 211, 238, 0.08);
             color: white;
             padding: 30px 20px;
             display: flex;
@@ -43,15 +98,18 @@
             font-weight: 800;
             margin-bottom: 55px;
             color: white;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
         }
 
         .logo span {
             color: #20d5d0;
+            text-shadow: 0 0 18px rgba(32, 213, 208, 0.7);
         }
 
         .menu-title {
             font-size: 11px;
-            color: #64748b;
+            color: #b8a25a;
             margin-bottom: 15px;
             letter-spacing: 2px;
         }
@@ -63,14 +121,23 @@
             padding: 14px;
             border-radius: 12px;
             margin-bottom: 9px;
-            transition: .2s;
+            border: 1px solid transparent;
+            transition: all .25s ease;
         }
 
-        .menu a:hover,
+        .menu a:hover {
+            background: rgba(34, 211, 238, 0.08);
+            border-color: rgba(34, 211, 238, 0.25);
+            color: #e6fbff;
+            transform: translateX(4px);
+        }
+
         .menu a.active {
             background: linear-gradient(90deg, #06b6d4, #25d4bd);
             color: #06121f;
             font-weight: 700;
+            box-shadow: 0 6px 24px rgba(6, 182, 212, 0.35),
+                        0 0 0 1px rgba(212, 175, 55, 0.25);
         }
 
         .sidebar-bottom {
@@ -80,24 +147,27 @@
         .logout-button {
             width: 100%;
             padding: 13px;
-            border: 1px solid #164e63;
-            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            background: rgba(6, 182, 212, 0.05);
             color: #22d3ee;
             border-radius: 10px;
             cursor: pointer;
+            transition: all .25s ease;
         }
 
         .logout-button:hover {
-            background: #06b6d4;
+            background: linear-gradient(90deg, #06b6d4, #25d4bd);
             color: #06121f;
+            border-color: transparent;
+            box-shadow: 0 6px 24px rgba(6, 182, 212, 0.35);
         }
 
-        /* MAIN */
+        /* ===== MAIN ===== */
         .main {
             flex: 1;
             padding: 35px 45px;
             min-width: 0;
-            background: linear-gradient(135deg, #0b1220, #111c30);
+            background: transparent;
         }
 
         .topbar {
@@ -119,21 +189,115 @@
         }
 
         .user-badge {
-            background: #111c30;
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: #22d3ee;
-            border: 1px solid #164e63;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             padding: 12px 18px;
             border-radius: 14px;
             font-weight: 600;
-            box-shadow: 0 0 15px #06b6d410;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
         }
 
-        /* WELCOME */
+        /* ===== GAMIFIKASI (level, streak, XP) ===== */
+        .gamify {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.18), rgba(6, 182, 212, 0.14));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35),
+                        0 0 20px rgba(6, 182, 212, 0.1);
+        }
+
+        .gamify-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .badge-level {
+            background: rgba(212, 175, 55, 0.15);
+            color: #f3d97a;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+        }
+
+        .badge-streak {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.4);
+        }
+
+        .gamify h3 {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 4px 0;
+        }
+
+        .gamify p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .xp-box {
+            background: rgba(5, 10, 20, 0.6);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            padding: 12px 16px;
+            border-radius: 12px;
+            min-width: 220px;
+        }
+
+        .xp-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        .xp-info .xp-value {
+            color: #22d3ee;
+        }
+
+        .xp-track {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            height: 8px;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            background: linear-gradient(90deg, #d4af37, #22d3ee, #14b8a6);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        /* ===== WELCOME ===== */
         .welcome-card {
             background: linear-gradient(120deg, #0e7490, #0891b2, #14b8a6);
             color: white;
-            border: 1px solid #22d3ee;
-            box-shadow: 0 0 25px #06b6d420;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 12px 50px rgba(6, 182, 212, 0.25),
+                        0 0 0 1px rgba(212, 175, 55, 0.15);
             border-radius: 22px;
             padding: 30px;
             margin-bottom: 25px;
@@ -160,7 +324,7 @@
             opacity: .2;
         }
 
-        /* STATISTICS */
+        /* ===== STATISTIK ===== */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -168,12 +332,26 @@
             margin-bottom: 25px;
         }
 
+        .stat-card,
+        .card {
+            background: linear-gradient(145deg, rgba(20, 32, 56, 0.6), rgba(10, 18, 36, 0.55));
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transition: transform .25s ease, border-color .25s ease;
+        }
+
+        .stat-card:hover,
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(212, 175, 55, 0.35);
+        }
+
         .stat-card {
-            background: #111c30;
-            border: 1px solid #24364d;
             border-radius: 18px;
             padding: 23px;
-            box-shadow: 0 5px 25px #00000020;
         }
 
         .stat-card small {
@@ -191,19 +369,11 @@
             font-size: 25px;
         }
 
-        .purple {
-            color: #22d3ee;
-        }
+        .purple { color: #22d3ee; }
+        .green  { color: #2dd4bf; }
+        .orange { color: #fbbf24; }
 
-        .green {
-            color: #2dd4bf;
-        }
-
-        .orange {
-            color: #fbbf24;
-        }
-
-        /* CONTENT */
+        /* ===== CONTENT ===== */
         .content-grid {
             display: grid;
             grid-template-columns: 1.5fr 1fr;
@@ -212,11 +382,8 @@
         }
 
         .card {
-            background: #111c30;
-            border: 1px solid #24364d;
             padding: 25px;
             border-radius: 18px;
-            box-shadow: 0 5px 25px #00000020;
             margin-bottom: 22px;
         }
 
@@ -237,7 +404,7 @@
             font-size: 12px;
         }
 
-        /* PROGRESS */
+        /* ===== PROGRESS ===== */
         .progress-info {
             display: flex;
             justify-content: space-between;
@@ -249,7 +416,7 @@
         .progress-track {
             width: 100%;
             height: 11px;
-            background: #26364b;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 20px;
             overflow: hidden;
         }
@@ -262,7 +429,7 @@
             transition: width .3s;
         }
 
-        /* FORM */
+        /* ===== FORM ===== */
         .add-form {
             display: grid;
             gap: 13px;
@@ -272,11 +439,11 @@
         .add-form textarea {
             width: 100%;
             padding: 13px 15px;
-            border: 1px solid #334155;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 11px;
             outline: none;
             font-size: 14px;
-            background: #080f1e;
+            background: rgba(5, 10, 20, 0.6);
             color: #f1f5f9;
         }
 
@@ -316,14 +483,14 @@
             background: linear-gradient(90deg, #0891b2, #0d9488);
         }
 
-        /* ACTIVITY LIST */
+        /* ===== DAFTAR AKTIVITAS ===== */
         .activity-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
             padding: 17px 0;
-            border-bottom: 1px solid #26364b;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .activity-item:last-child {
@@ -404,7 +571,7 @@
             margin-bottom: 10px;
         }
 
-        /* NOTIFICATION */
+        /* ===== NOTIFIKASI ===== */
         .success {
             background: #103b36;
             color: #5eead4;
@@ -420,12 +587,12 @@
             font-size: 12px;
         }
 
-        /* MOTIVATION */
+        /* ===== MOTIVASI ===== */
         .card p {
             color: #94a3b8;
         }
 
-        /* RESPONSIVE */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
             .main {
                 padding: 25px;
@@ -500,8 +667,6 @@
 
 <body>
 
-
-
 @php
     $pending = $total - $done;
     $percentage = $total > 0 ? round(($done / $total) * 100) : 0;
@@ -550,39 +715,40 @@
             </div>
         </header>
 
-        <!-- WELCOME -->
-         <!-- Widget Gamifikasi (CSS Murni Sesuai Tema TaskVibe) -->
-<div style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.2), rgba(6, 182, 212, 0.2)); border: 1px solid rgba(6, 182, 212, 0.3); padding: 20px; border-radius: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);">
-    <div>
-        <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-            <span style="background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold;">
-                ⭐ Level {{ auth()->user()->level ?? 1 }}
-            </span>
-            <span style="background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold;">
-                🔥 Streak: {{ auth()->user()->streak_count ?? 0 }} Hari
-            </span>
-        </div>
-        <h3 style="color: #ffffff; font-size: 18px; font-weight: bold; margin: 0 0 4px 0;">Misi Operator: {{ auth()->user()->name }}</h3>
-        <p style="color: #94a3b8; font-size: 13px; margin: 0;">Selesaikan tugas di bawah untuk menambah XP dan menaikkan level!</p>
-    </div>
-
-    <!-- XP Progress Bar -->
-    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(6, 182, 212, 0.2); padding: 12px 16px; border-radius: 12px; min-width: 220px;">
+        <!-- GAMIFIKASI -->
         @php
             $currentExp = auth()->user()->exp ?? 0;
             $expInCurrentLevel = $currentExp % 100;
         @endphp
-        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #cbd5e1; font-weight: 600;">
-            <span>XP Progress</span>
-            <span style="color: #22d3ee;">{{ $expInCurrentLevel }} / 100 XP</span>
+
+        <div class="gamify">
+            <div>
+                <div class="gamify-badges">
+                    <span class="badge badge-level">
+                        ⭐ Level {{ auth()->user()->level ?? 1 }}
+                    </span>
+                    <span class="badge badge-streak">
+                        🔥 Streak: {{ auth()->user()->streak_count ?? 0 }} Hari
+                    </span>
+                </div>
+                <h3>Misi Operator: {{ auth()->user()->name }}</h3>
+                <p>Selesaikan tugas di bawah untuk menambah XP dan menaikkan level!</p>
+            </div>
+
+            <div class="xp-box">
+                <div class="xp-info">
+                    <span>XP Progress</span>
+                    <span class="xp-value">{{ $expInCurrentLevel }} / 100 XP</span>
+                </div>
+                <div class="xp-track">
+                    <div class="xp-fill" style="width: {{ $expInCurrentLevel }}%;"></div>
+                </div>
+            </div>
         </div>
-        <div style="width: 100%; background: #1e293b; height: 8px; border-radius: 9999px; overflow: hidden;">
-            <div style="background: linear-gradient(90deg, #22d3ee, #14b8a6); height: 100%; width: {{ $expInCurrentLevel }}%; transition: width 0.5s ease;"></div>
-        </div>
-    </div>
-</div>
+
+        <!-- WELCOME -->
         <section class="welcome-card">
-            <div class="welcome-decoration">✦</div>
+            <div class="welcome-decoration">🏆</div>
 
             <h2>Selamat Datang Kembali! 👋</h2>
 
