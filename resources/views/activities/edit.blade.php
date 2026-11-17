@@ -132,7 +132,8 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 14px 16px;
             background: rgba(5, 10, 20, 0.6);
@@ -145,8 +146,13 @@
             transition: 0.3s;
         }
 
+        .form-group select {
+            color-scheme: dark;
+        }
+
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             border-color: #06b6d4;
             box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
         }
@@ -255,6 +261,24 @@
                     name="description"
                     placeholder="Tambahkan deskripsi aktivitas..."
                 >{{ old('description', $activity->description) }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Kategori</label>
+                <select name="category" required>
+                    @foreach (\App\Models\Activity::CATEGORIES as $value => $label)
+                        <option value="{{ $value }}" @selected(old('category', $activity->category) === $value)>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Prioritas</label>
+                <select name="priority" required>
+                    @foreach (\App\Models\Activity::PRIORITIES as $value => $label)
+                        <option value="{{ $value }}" @selected(old('priority', $activity->priority) === $value)>{{ $label }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">

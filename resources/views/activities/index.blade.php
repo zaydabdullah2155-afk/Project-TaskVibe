@@ -464,7 +464,10 @@
         }
 
         .add-form input,
-        .add-form textarea {
+        .add-form textarea,
+        .add-form select,
+        .filter-form input,
+        .filter-form select {
             width: 100%;
             padding: 13px 15px;
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -473,6 +476,11 @@
             font-size: 14px;
             background: rgba(5, 10, 20, 0.6);
             color: #f1f5f9;
+        }
+
+        .add-form select,
+        .filter-form select {
+            color-scheme: dark;
         }
 
         .add-form input[type="time"],
@@ -486,7 +494,10 @@
         }
 
         .add-form input:focus,
-        .add-form textarea:focus {
+        .add-form textarea:focus,
+        .add-form select:focus,
+        .filter-form input:focus,
+        .filter-form select:focus {
             border-color: #06b6d4;
             box-shadow: 0 0 0 2px #06b6d420;
         }
@@ -514,6 +525,44 @@
 
         .primary-button:hover {
             background: linear-gradient(90deg, #f3d97a, #2dd4bf);
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-field label {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .filter-actions {
+            display: flex;
+            align-items: end;
+            gap: 8px;
+        }
+
+        .secondary-button {
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(15, 23, 42, 0.8);
+            color: #cbd5e1;
+            padding: 12px 14px;
+            border-radius: 11px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .filter-actions .primary-button {
+            flex: 1;
+            padding: 12px 14px;
         }
 
         /* ===== DAFTAR AKTIVITAS ===== */
@@ -545,6 +594,34 @@
         .activity-info small {
             color: #94a3b8;
             font-size: 12px;
+        }
+
+        .activity-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .activity-tag {
+            border: 1px solid rgba(34, 211, 238, 0.25);
+            background: rgba(34, 211, 238, 0.08);
+            color: #a5f3fc;
+            border-radius: 999px;
+            padding: 3px 8px;
+            font-size: 10px;
+        }
+
+        .priority-high {
+            color: #fda4af;
+            border-color: rgba(251, 113, 133, 0.35);
+            background: rgba(251, 113, 133, 0.1);
+        }
+
+        .priority-low {
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.25);
+            background: rgba(148, 163, 184, 0.08);
         }
 
         .done {
@@ -733,6 +810,10 @@
             .activity-actions {
                 justify-content: flex-start;
             }
+
+            .filter-form {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
@@ -905,8 +986,45 @@
 
                     <div class="card-header">
                         <h3>Daftar Aktivitas</h3>
-                        <span>{{ $total }} aktivitas</span>
+                        <span>{{ $activities->count() }} ditampilkan / {{ $total }} total</span>
                     </div>
+
+                    <form class="filter-form" method="GET" action="{{ route('activities.index') }}">
+                        <div class="filter-field">
+                            <label for="filter-q">Cari aktivitas</label>
+                            <input id="filter-q" type="search" name="q" value="{{ $filters['q'] ?? '' }}" placeholder="Nama atau deskripsi">
+                        </div>
+                        <div class="filter-field">
+                            <label for="filter-status">Status</label>
+                            <select id="filter-status" name="status">
+                                <option value="">Semua status</option>
+                                <option value="pending" @selected(($filters['status'] ?? '') === 'pending')>Belum selesai</option>
+                                <option value="done" @selected(($filters['status'] ?? '') === 'done')>Selesai</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="filter-category">Kategori</label>
+                            <select id="filter-category" name="category">
+                                <option value="">Semua kategori</option>
+                                @foreach (\App\Models\Activity::CATEGORIES as $value => $label)
+                                    <option value="{{ $value }}" @selected(($filters['category'] ?? '') === $value)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="filter-priority">Prioritas</label>
+                            <select id="filter-priority" name="priority">
+                                <option value="">Semua prioritas</option>
+                                @foreach (\App\Models\Activity::PRIORITIES as $value => $label)
+                                    <option value="{{ $value }}" @selected(($filters['priority'] ?? '') === $value)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button type="submit" class="primary-button">Filter</button>
+                            <a class="secondary-button" href="{{ route('activities.index') }}">Reset</a>
+                        </div>
+                    </form>
 
                     @forelse ($activities as $activity)
 
@@ -917,6 +1035,15 @@
                                 <strong class="{{ $activity->is_done ? 'done' : '' }}">
                                     {{ $activity->name }}
                                 </strong>
+
+                                <div class="activity-badges">
+                                    <span class="activity-tag">
+                                        {{ \App\Models\Activity::CATEGORIES[$activity->category] ?? ucfirst($activity->category) }}
+                                    </span>
+                                    <span class="activity-tag {{ $activity->priority === 'tinggi' ? 'priority-high' : ($activity->priority === 'rendah' ? 'priority-low' : '') }}">
+                                        Prioritas {{ \App\Models\Activity::PRIORITIES[$activity->priority] ?? ucfirst($activity->priority) }}
+                                    </span>
+                                </div>
 
                                 <small>
                                     ◷ Pukul {{ substr($activity->remind_at, 0, 5) }}
@@ -973,8 +1100,8 @@
 
                         <div class="empty-state">
                             <div>📝</div>
-                            <strong>Belum Ada Aktivitas</strong>
-                            <p>Tambahkan pengingat pertamamu sekarang!</p>
+                            <strong>{{ count(array_filter($filters)) ? 'Aktivitas tidak ditemukan' : 'Belum Ada Aktivitas' }}</strong>
+                            <p>{{ count(array_filter($filters)) ? 'Coba ubah atau reset filter pencarian.' : 'Tambahkan pengingat pertamamu sekarang!' }}</p>
                         </div>
 
                     @endforelse
@@ -1019,6 +1146,26 @@
                             name="description"
                             placeholder="Tambahkan deskripsi (opsional)"
                         >{{ old('description') }}</textarea>
+
+                        <label>
+                            <small>Kategori</small>
+                        </label>
+
+                        <select name="category" required>
+                            @foreach (\App\Models\Activity::CATEGORIES as $value => $label)
+                                <option value="{{ $value }}" @selected(old('category', 'lainnya') === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+
+                        <label>
+                            <small>Prioritas</small>
+                        </label>
+
+                        <select name="priority" required>
+                            @foreach (\App\Models\Activity::PRIORITIES as $value => $label)
+                                <option value="{{ $value }}" @selected(old('priority', 'sedang') === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
 
                         <label>
                             <small>Waktu Pengingat</small>
@@ -1068,6 +1215,18 @@
 
                 </div>
 
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Notifikasi Browser</h3>
+                    </div>
+                    <p id="notification-status" aria-live="polite" style="font-size:13px;line-height:1.7;">
+                        Aktifkan notifikasi untuk mendapatkan pengingat saat dashboard ini terbuka.
+                    </p>
+                    <button id="enable-notifications" type="button" class="primary-button" style="width:100%;margin-top:14px;">
+                        Aktifkan Notifikasi
+                    </button>
+                </div>
+
             </div>
 
         </section>
@@ -1112,6 +1271,77 @@
 
     updateTimers();
     setInterval(updateTimers, 1000);
+
+    const reminders = @json($reminders);
+    const notificationButton = document.getElementById('enable-notifications');
+    const notificationStatus = document.getElementById('notification-status');
+
+    function updateNotificationControls() {
+        if (!window.isSecureContext) {
+            notificationStatus.textContent = 'Notifikasi browser memerlukan HTTPS atau localhost.';
+            notificationButton.hidden = true;
+            return;
+        }
+
+        if (!('Notification' in window)) {
+            notificationStatus.textContent = 'Browser ini tidak mendukung notifikasi.';
+            notificationButton.hidden = true;
+            return;
+        }
+
+        if (Notification.permission === 'granted') {
+            notificationStatus.textContent = 'Notifikasi aktif selama dashboard terbuka.';
+            notificationButton.hidden = true;
+        } else if (Notification.permission === 'denied') {
+            notificationStatus.textContent = 'Izin notifikasi diblokir. Ubah izin TaskVibe dari pengaturan situs di browser.';
+            notificationButton.disabled = true;
+        }
+    }
+
+    function checkReminders() {
+        if (!('Notification' in window) || Notification.permission !== 'granted') {
+            return;
+        }
+
+        const now = new Date();
+        const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+        const currentTime = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+        reminders.forEach(function (reminder) {
+            if (reminder.remindAt !== currentTime) {
+                return;
+            }
+
+            const storageKey = `taskvibe-reminder-${today}-${reminder.id}`;
+            if (localStorage.getItem(storageKey)) {
+                return;
+            }
+
+            localStorage.setItem(storageKey, 'sent');
+            new Notification(`Pengingat: ${reminder.name}`, {
+                body: 'Waktunya mengerjakan aktivitasmu.',
+                tag: storageKey
+            });
+        });
+    }
+
+    notificationButton.addEventListener('click', function () {
+        if (!window.isSecureContext || !('Notification' in window)) {
+            updateNotificationControls();
+            return;
+        }
+
+        Notification.requestPermission().then(function () {
+            updateNotificationControls();
+            checkReminders();
+        }).catch(function () {
+            notificationStatus.textContent = 'Izin notifikasi gagal diminta. Coba ubah izin dari pengaturan browser.';
+        });
+    });
+
+    updateNotificationControls();
+    checkReminders();
+    setInterval(checkReminders, 30000);
 </script>
 
 </body>

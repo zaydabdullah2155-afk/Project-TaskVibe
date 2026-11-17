@@ -7,10 +7,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
+    public const CATEGORIES = [
+        'kuliah' => 'Kuliah',
+        'kerja' => 'Kerja',
+        'pribadi' => 'Pribadi',
+        'kesehatan' => 'Kesehatan',
+        'lainnya' => 'Lainnya',
+    ];
+
+    public const PRIORITIES = [
+        'rendah' => 'Rendah',
+        'sedang' => 'Sedang',
+        'tinggi' => 'Tinggi',
+    ];
+
     protected $fillable = [
         'user_id',
         'name',
         'description',
+        'category',
+        'priority',
         'remind_at',
         'deadline_at',
         'is_done',
