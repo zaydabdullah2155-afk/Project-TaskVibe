@@ -35,6 +35,7 @@ class Activity extends Model
     protected $casts = [
         'is_done' => 'boolean',
         'deadline_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

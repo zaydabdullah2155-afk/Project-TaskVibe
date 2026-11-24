@@ -457,6 +457,41 @@
             transition: width .3s;
         }
 
+        .activity-chart {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        .activity-chart-grid {
+            stroke: rgba(148, 163, 184, 0.2);
+            stroke-dasharray: 4 6;
+            stroke-width: 1;
+        }
+
+        .activity-chart-line {
+            fill: none;
+            stroke: #22d3ee;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 4;
+            filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.45));
+        }
+
+        .activity-chart-dot {
+            fill: #0b1728;
+            stroke: #67e8f9;
+            stroke-width: 3;
+        }
+
+        .activity-chart-label {
+            fill: #94a3b8;
+            font-family: inherit;
+            font-size: 11px;
+            text-anchor: middle;
+        }
+
         /* ===== FORM ===== */
         .add-form {
             display: grid;
@@ -959,6 +994,46 @@
         <section class="content-grid">
 
             <div>
+
+                <!-- ACTIVITY CHART -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Aktivitas Selesai - 7 Hari Terakhir</h3>
+                        <span>Per hari</span>
+                    </div>
+
+                    <svg class="activity-chart"
+                         viewBox="0 0 700 210"
+                         role="img"
+                         aria-labelledby="activity-chart-title activity-chart-description">
+                        <title id="activity-chart-title">Aktivitas selesai selama tujuh hari terakhir</title>
+                        <desc id="activity-chart-description">Grafik garis jumlah aktivitas selesai per hari.</desc>
+
+                        @foreach ([28, 65, 102, 139] as $gridLineY)
+                            <line class="activity-chart-grid"
+                                  x1="30"
+                                  y1="{{ $gridLineY }}"
+                                  x2="670"
+                                  y2="{{ $gridLineY }}" />
+                        @endforeach
+
+                        <polyline class="activity-chart-line" points="{{ $activityChartLine }}" />
+
+                        @foreach ($activityChartPoints as $point)
+                            <g aria-label="{{ $point['label'] }}: {{ $point['count'] }} aktivitas selesai">
+                                <circle class="activity-chart-dot"
+                                        cx="{{ $point['x'] }}"
+                                        cy="{{ $point['y'] }}"
+                                        r="5">
+                                    <title>{{ $point['label'] }}: {{ $point['count'] }} aktivitas selesai</title>
+                                </circle>
+                                <text class="activity-chart-label" x="{{ $point['x'] }}" y="{{ $point['countY'] }}">{{ $point['count'] }}</text>
+                                <text class="activity-chart-label" x="{{ $point['x'] }}" y="170">{{ $point['weekday'] }}</text>
+                                <text class="activity-chart-label" x="{{ $point['x'] }}" y="190">{{ $point['date'] }}</text>
+                            </g>
+                        @endforeach
+                    </svg>
+                </div>
 
                 <!-- PROGRESS -->
                 <div class="card">

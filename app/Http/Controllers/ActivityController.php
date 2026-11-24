@@ -50,8 +50,56 @@ class ActivityController extends Controller
                 'remindAt' => substr((string) $activity->remind_at, 0, 5),
             ])
             ->values();
+        $chartEnd = now();
+        $chartStart = $chartEnd->copy()->subDays(6)->startOfDay();
+        $activityCounts = $request->user()->activities()
+            ->where('is_done', true)
+            ->whereNotNull('completed_at')
+            ->whereBetween('completed_at', [$chartStart, $chartEnd])
+            ->get(['completed_at'])
+            ->countBy(fn (Activity $activity): string => $activity->completed_at->toDateString());
+        $weekdayLabels = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+        $activityChart = collect(range(0, 6))
+            ->map(function (int $daysFromStart) use ($activityCounts, $chartStart, $weekdayLabels): array {
+                $date = $chartStart->copy()->addDays($daysFromStart);
+                $weekday = $weekdayLabels[$date->dayOfWeek];
 
-        return view('activities.index', compact('activities', 'total', 'done', 'filters', 'reminders'));
+                return [
+                    'date' => $date->format('d/m'),
+                    'label' => "{$weekday} {$date->format('d/m')}",
+                    'weekday' => $weekday,
+                    'count' => $activityCounts->get($date->toDateString(), 0),
+                ];
+            })
+            ->all();
+        $maxActivityCount = max(array_column($activityChart, 'count'));
+        $activityChartPoints = collect($activityChart)
+            ->values()
+            ->map(function (array $point, int $index) use ($maxActivityCount): array {
+                $y = 140 - ($maxActivityCount > 0 ? ($point['count'] / $maxActivityCount) * 112 : 0);
+
+                return $point + [
+                    'x' => 50 + ($index * 100),
+                    'y' => $y,
+                    'countY' => max(14, $y - 12),
+                ];
+            })
+            ->all();
+        $activityChartLine = implode(' ', array_map(
+            fn (array $point): string => "{$point['x']},{$point['y']}",
+            $activityChartPoints,
+        ));
+
+        return view('activities.index', compact(
+            'activities',
+            'total',
+            'done',
+            'filters',
+            'reminders',
+            'activityChart',
+            'activityChartPoints',
+            'activityChartLine',
+        ));
     }
 
     public function store(Request $request): RedirectResponse
@@ -103,7 +151,9 @@ class ActivityController extends Controller
 
         // Ubah status selesai (jika tadinya belum selesai, kini jadi selesai)
         $newStatus = ! $activity->is_done;
-        $activity->update(['is_done' => $newStatus]);
+        $activity->is_done = $newStatus;
+        $activity->completed_at = $newStatus ? now() : null;
+        $activity->save();
 
         $message = 'Status aktivitas diperbarui.';
 
